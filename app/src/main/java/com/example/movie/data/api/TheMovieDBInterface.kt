@@ -3,10 +3,16 @@ package com.example.movie.data.api
 import retrofit2.http.GET
 import retrofit2.http.Path
 import com.example.movie.data.vo.MovieDetails
+import com.example.movie.data.vo.MovieResponse
 import io.reactivex.Single
+import retrofit2.http.Query
 
 interface TheMovieDBInterface {
-    @GET("movie/{299534}")
-    fun getMovieDetail(@Path("299534")id:Int):Single<MovieDetails>
+
+    @GET("movie/popular")
+    fun getPopularMovie(@Query("page") page: Int):Single<MovieResponse>
+
+    @GET("movie/{movie_id}")
+    fun getMovieDetail(@Path("movie_id")id:Int):Single<MovieDetails>
 
 }
