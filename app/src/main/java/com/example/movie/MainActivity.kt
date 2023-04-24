@@ -1,9 +1,8 @@
-package com.example.movie.ui.popular_movie
+package com.example.movie
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.GridLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -11,14 +10,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.movie.R
 import com.example.movie.data.api.TheMovieDBInterface
 import com.example.movie.data.api.TheMovieDbClient
 import com.example.movie.data.repository.NetworkState
+import com.example.movie.ui.popular_movie.MainActivityViewModel
+import com.example.movie.ui.popular_movie.MoviePagedListRepository
+import com.example.movie.ui.popular_movie.PopularMoviePagedListAdapter
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel1:MainActivityViewModel
+    private lateinit var viewModel1: MainActivityViewModel
     lateinit var movieRepository: MoviePagedListRepository
     private lateinit var rv_movie_list: RecyclerView
     val progress_bar_popular: ProgressBar = findViewById(R.id.progress_bar_popular)
