@@ -52,5 +52,7 @@
 
     <color name="white">#FFFFFFFF</color>
 
+    <color name="text_color">#3D155F</color>
+
     <color name="xam2">#393838</color>
 </resources>
