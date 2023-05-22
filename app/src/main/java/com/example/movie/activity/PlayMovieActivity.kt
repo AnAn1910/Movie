@@ -1,10 +1,10 @@
 package com.example.movie.activity
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
+//import android.annotation.TargetApi
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Build
+//import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -16,11 +16,15 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.movie.MyApplication
 import com.example.movie.R
 import com.example.movie.model.Movie
-import com.kaopiz.kprogresshud.KProgressHUD
+import io.github.rupinderjeet.kprogresshud.KProgressHUD
+
 
 class PlayMovieActivity : AppCompatActivity() {
 
@@ -29,10 +33,10 @@ class PlayMovieActivity : AppCompatActivity() {
     private var mMovie: Movie? = null
 
     @SuppressLint("SetJavaScriptEnabled")
-    @TargetApi(Build.VERSION_CODES.ECLAIR_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
+        @Suppress("DEPRECATION")
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_play_movie)
 
@@ -47,19 +51,17 @@ class PlayMovieActivity : AppCompatActivity() {
             .show()
         val webSettings = webView?.settings
         webSettings?.javaScriptEnabled = true
-        webSettings?.setAppCacheEnabled(true)
+        webView?.settings?.cacheMode=WebSettings.LOAD_NO_CACHE
         webSettings?.allowFileAccess = true
         webSettings?.builtInZoomControls = false
-        webSettings?.setSupportZoom(false)
-        webSettings?.saveFormData = true
         webSettings?.domStorageEnabled = true
         //improve webView performance
-        webSettings?.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        //webSettings?.setRenderPriority(WebSettings.RenderPriority.HIGH)
         webSettings?.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         webView?.scrollBarStyle = View.SCROLLBARS_INSIDE_OVERLAY
         webSettings?.useWideViewPort = true
-        webSettings?.savePassword = true
-        webSettings?.setEnableSmoothTransition(true)
+        //webSettings?.savePassword = true
+        //webSettings?.setEnableSmoothTransition(true)
         webView?.webChromeClient = ChromeClient()
         webView?.webViewClient = object : WebViewClient() {
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -75,14 +77,25 @@ class PlayMovieActivity : AppCompatActivity() {
         }
         mMovie?.getUrl()?.let { webView?.loadUrl(it) }
         val layoutFooter = findViewById<View?>(R.id.layout_footer) as LinearLayout?
-        layoutFooter?.setOnClickListener { onBackPressed() }
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Your back button handling logic goes here
+            }
+        }
+
+        layoutFooter?.setOnClickListener {
+            callback.handleOnBackPressed()
+        }
+
+        this.onBackPressedDispatcher.addCallback(this, callback)
         setHistory()
     }
 
     private fun getDataIntent() {
         val bundle = intent.extras ?: return
-        mMovie = bundle["object_movie"] as Movie?
+        mMovie = bundle.getBundle("object_movie") as Movie?
     }
+
 
     private fun setHistory() {
         if (mMovie!!.isHistory()) {
@@ -103,13 +116,11 @@ class PlayMovieActivity : AppCompatActivity() {
         webView?.restoreState(savedInstanceState)
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onPause() {
         super.onPause()
         webView?.onPause()
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onResume() {
         super.onResume()
         webView?.onResume()
@@ -145,7 +156,7 @@ class PlayMovieActivity : AppCompatActivity() {
         override fun onHideCustomView() {
             (window.decorView as FrameLayout).removeView(mCustomView)
             mCustomView = null
-            window.decorView.systemUiVisibility = mOriginalSystemUiVisibility
+            WindowInsetsControllerCompat(window, window.decorView).show(mOriginalSystemUiVisibility)
             requestedOrientation = mOriginalOrientation
             mCustomViewCallback?.onCustomViewHidden()
             mCustomViewCallback = null
@@ -157,11 +168,15 @@ class PlayMovieActivity : AppCompatActivity() {
                 return
             }
             mCustomView = paramView
-            mOriginalSystemUiVisibility = window.decorView.systemUiVisibility
+            mOriginalSystemUiVisibility = WindowInsetsControllerCompat(window, window.decorView).systemBarsBehavior
             mOriginalOrientation = requestedOrientation
             mCustomViewCallback = paramCustomViewCallback
             (window.decorView as FrameLayout).addView(mCustomView, FrameLayout.LayoutParams(-1, -1))
-            window.decorView.systemUiVisibility = 3846 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            WindowInsetsControllerCompat(window, window.decorView).apply {
+                systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                hide(WindowInsetsCompat.Type.systemBars())
+            }
         }
+
     }
 }

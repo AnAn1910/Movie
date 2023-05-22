@@ -26,7 +26,7 @@ import com.example.movie.utils.Utils
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.kaopiz.kprogresshud.KProgressHUD
+import io.github.rupinderjeet.kprogresshud.KProgressHUD
 import java.util.*
 
 class HomeFragment : Fragment() {
@@ -116,8 +116,9 @@ class HomeFragment : Fragment() {
                     if (key == null || (key == "")) {
                         listMovies?.add(0, movie)
                     } else {
-                        if (movie.getTitle()!!.trim().toLowerCase(Locale.getDefault())
-                                .contains(key.trim().toLowerCase(Locale.getDefault()))) {
+                        if (movie.getTitle()!!.trim().lowercase(Locale.getDefault())
+                                .contains(key.trim().lowercase(Locale.getDefault()))
+                        ) {
                             listMovies?.add(0, movie)
                         }
                     }

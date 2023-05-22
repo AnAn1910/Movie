@@ -33,6 +33,7 @@
         app:menu="@menu/menu_bottom_navigation"
         app:itemIconTint="@color/custom_bottom_navigation"
         app:itemTextColor="@color/custom_bottom_navigation"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        tools:ignore="VisualLintBottomNav" />
 
 </RelativeLayout>

@@ -29,7 +29,7 @@ class MovieHistoryAdapter(private val listMovies: MutableList<Movie?>?, private 
         val movie = listMovies?.get(position) ?: return
         holder.tvTitleMovie?.text = movie.getTitle()
         if (movie.getImage() != null && movie.getImage() != "") {
-            holder.imgMovie?.let { Glide.with(mActivity!!).load(movie.getImage()).error(R.drawable.ic_no_image).into(it) }
+            holder.imgMovie?.let { Glide.with(mActivity?.applicationContext!!).load(movie.getImage()).error(R.drawable.ic_no_image).into(it) }
         } else {
             holder.imgMovie?.setImageResource(R.drawable.ic_no_image)
         }

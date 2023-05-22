@@ -6,8 +6,11 @@
    See https://developer.android.com/about/versions/12/backup-restore
 -->
 <full-backup-content>
-    <!--
-   <include domain="sharedpref" path="."/>
-   <exclude domain="sharedpref" path="device.xml"/>
--->
+    <!-- Define the files and directories to include in the backup -->
+    <include domain="file" path="shared_prefs/" />
+    <include domain="file" path="databases/" />
+
+    <!-- Exclude certain files and directories from the backup -->
+    <exclude domain="file" path="databases/cache.db" />
+    <exclude domain="file" path="shared_prefs/settings.xml" />
 </full-backup-content>

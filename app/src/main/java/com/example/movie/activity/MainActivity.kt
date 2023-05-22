@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-        mBottomNavigationView?.setOnNavigationItemSelectedListener { item ->
+        mBottomNavigationView?.setOnItemSelectedListener  { item ->
             val id = item.itemId
             if (id == R.id.nav_home) {
                 mViewPager2?.currentItem = 0
